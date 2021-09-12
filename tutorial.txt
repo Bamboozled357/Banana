@@ -1,0 +1,107 @@
+# INSERT
+# SQLAlchemy Syntax -> session.query(Publication) == Django -> Publication.objects.create(title='...', text='...', etc)
+# INSERT INTO publication (title, text, ...) VALUES (...)
+# pub = Publication(title=..., etc)
+# pub.save()
+
+# создание нескольких записей одним запросом:
+# Publication.objects.bulk_create(
+#     [
+#         Publication(...),
+#         Publication(...),
+#         Publication(...),
+#
+#     ]
+# )
+
+# SELECT
+# SELECT * FROM publication;
+# Publication.objects.all() # запрос через ORM
+
+# SELECT title FROM publication;
+# Publication.objects.only('title') # первый вариант - вытаскиваем поля которые НУЖНЫ
+
+# SELECT title, text, status FROM publication;
+# Publication.objects.only('title', 'text', 'status') # первый вариант - вытаскиваем поля которые НУЖНЫ
+# Publication.objects.defer('user', 'created_at', 'updated_at') # второй вариант - НАОБОРОТ указываем НЕНУЖНЫЕ поля, которые не нужно вытаскивать
+
+# фильтрация
+# SELECT * FROM publication WHERE ...;
+# Publication.objects.filter(...)
+
+# Операции:
+
+# 1.Сравнения(по числовым полям либо по дате):
+# SELECT * FROM publication WHERE id =1;
+# Publication.objects.filter(id=1)
+
+# SELECT * FROM publication WHERE created_at > '...';
+# import datetime
+# current = datetime.datetime.strptime('09-09-2021 12:52:46', '%d-%m-%Y %H:%M:%S')
+# Publication.objects.filter(created_at__gt=current)
+
+# ">" -> gt
+# "<" -> lt
+# ">=" -> gte
+# "<=" -> lte
+# "=" -> =
+# "=" -> exact/iexact (в зависимости нужно учитывать регистр или нет)
+
+# "IN" -> in
+# "BETWEEN" -> range
+
+# сортировка
+# SELECT * FROM publication ORDER BY created_at ASC;
+# Publication.objects.ordey_by('created_at')
+# SELECT * FROM publication ORDER BY created_at DESC;
+# Publication.objects.ordey_by('-created_at')
+
+# SELECT * FROM publication WHERE ... ORDER_BY created_at;
+# Publication.objects.filter(...).order_by('created_at')
+
+# LIMIT
+# SELECT * FROM publication LIMIT 10;
+# Publication.objects.all()[:10]
+
+# SELECT * FROM publication LIMIT 10 OFFSET 10;
+# Publication.objects.all[10:20]
+
+# SELECT * FROM publication WHERE id=1;
+# Publication.object.filter(id=1) # проблема в том, что запись выдаст в виде списка, а это неудобно
+# [pub1]
+# поэтому, чтобы получить одну запись проделаем следующее:
+# SELECT * FROM publication WHERE id=1 LIMIT 1;
+# Publication.objects.get(id=1)
+# или
+# Publication.objects.filter(id=1).first()
+
+# UPDATE
+# обновление всех записей:
+# UPDATE publication SET status='closed';
+# Publication.objects.update(status='closed')
+
+# обновление части записей
+# UPDATE publication SET status='closed' WHERE status='draft';
+# Publication.objects.filter(status='draft').filter.update(status='closed')
+
+# обновление одной записи
+# UPDATE publication SET status='closed' WHERE id=1;
+# 1. Publication.objects.filter(id=1).update(status='closed') #не лучший вариант
+# 2. pub = Publication.objects.get(id=1)
+#    pub.status = 'closed'
+#    pub.save()
+
+# DELETE
+# удаление всех записей
+# DELETE * FROM publication;
+# Publication.objects.delete()
+
+# удаление части записей
+# DELETE * FROM publication WHERE status='closed';
+# Publication.objects.filter(status='closed').delete()
+
+# удаление одной записи
+# DELETE FROM publication WHERE id=1;
+# 1. Publication.objects.filter(id=1).delete(status='closed') # опять же не лучший вариант
+# 2. pub = Publication.objects.get(id=1)
+#    pub.delete()
