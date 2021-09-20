@@ -17,11 +17,12 @@ from django.conf.global_settings import MEDIA_ROOT
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
+from rest_framework_swagger.views import get_swagger_view
 
-from main.views import test_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', test_view),
+    path('account/', include('account.urls')),
+    path('', include('main.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

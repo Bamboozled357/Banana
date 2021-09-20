@@ -52,9 +52,9 @@
 
 # сортировка
 # SELECT * FROM publication ORDER BY created_at ASC;
-# Publication.objects.ordey_by('created_at')
+# Publication.objects.order_by('created_at')
 # SELECT * FROM publication ORDER BY created_at DESC;
-# Publication.objects.ordey_by('-created_at')
+# Publication.objects.order_by('-created_at')
 
 # SELECT * FROM publication WHERE ... ORDER_BY created_at;
 # Publication.objects.filter(...).order_by('created_at')

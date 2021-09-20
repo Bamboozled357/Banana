@@ -1,0 +1,33 @@
+AutoField то же самое что и      SERIAL
+BigAutoField то же самое что и   BIGSERIAL
+SmallAutoField то же самое что и SMALLSERIAL
+
+IntegerField                     INTEGER
+BigIntegerField                  BIGINT
+SmallIntegerField                SMALLINT
+
+PositiveIntegerField             INTEGER, мин. значение 0
+PositiveBigIntegerField          BIGINTEGER, мин. значение 0
+PositiveSmallIntegerField        SMALLINTEGER, мин. значение 0
+
+FloatField                       REAL (DOUBLEPRECISION)
+DecimalField                     NUMERIC/DECIMAL
+
+CharField                        VARCHAR
+TextField                        TEXT
+DateField                        DATE
+DateTimeField                    TIMESTAMP
+BooleanField                     BOOLEAN
+EmailField                       VARCHAR (с доп. проверками, например есть ли @ и тд)
+SlugField                        VARCHAR (не позволяет использовать некоторые символы)
+URLField                         VARCHAR (чтобы поле являлось валидной ссылкой)
+FileField                        VARCHAR (привязка к файдлу)
+ImageField                       VARCHAR (приявязка к изображению)
+JsonField                        json
+TimeField                        TIME
+
+ForeignKey (тип этого поля в БД будет соответствовать с типом PK в связанной таблице),
+автоматически в БД создаётся поле с постфиксом _id. Например, поле которое мы создали называется user,
+то в psql он появится как user_id.
+OneToOneField
+ManyToManyField

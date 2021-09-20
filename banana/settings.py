@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Корневая папка проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # Секретный ключ(используется для построения шифров) Без него проект не будет работать
-SECRET_KEY = 'django-insecure-&+h+l@i&&46aty+o*-&m1goa_*xewr9=7a4zjypfz-sj(c!nyy'
+SECRET_KEY = config('SECRET_KEY')
 
 # режим разработки (включен или нет) При загрузки на сервер обязательно выключить, иначе небезопасно
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 # разрешённые хосты (с каких доменных и ip адресов есть доступ
 ALLOWED_HOSTS = []
 
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # сторонние приложения
     'rest_framework',
+    'rest_framework.authtoken',  # для ключа(токена) при логине(входе) в сериализаторах. сделать миграции (обязательно)
+    'django_filters',
     # из проекта
     'account',
     'main'
@@ -90,11 +93,11 @@ WSGI_APPLICATION = 'banana.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'banana',
-        'USER': 'roman',
-        'PASSWORD': '123',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
-        'PORT': 5432
+        'PORT': config('DB_PORT')
     }
 }
 
@@ -147,3 +150,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.User'  # модель пользователя
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+
+"""ГЛОБАЛЬНЫЕ НАСТРОЙКИ РЕСТ ФРЕЙМВОРКА (после authtoken в установленных приложениях"""
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5
+}
+# после REST FRAMEWORK идём обратно во вьюхи к loginview который наследуется от ObtainAuthToken

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Publication,Comment
+from .models import Publication, Comment
 
 
 admin.site.register(Publication)
